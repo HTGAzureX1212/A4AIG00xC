@@ -1,0 +1,10 @@
+[package]
+name = "kmeans_impl"
+version = "0.0.0"
+edition = "2021"
+authors = ["HTGAzureX1212."]
+description = "KMeans implementation for Lesson 3 Assignment"
+license = "GPL-3.0-only"
+
+[dependencies]
+rand = "0.8.5"
