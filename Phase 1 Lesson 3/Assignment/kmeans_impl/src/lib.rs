@@ -5,8 +5,8 @@ use std::sync::{Arc, Mutex};
 use rand::Rng;
 
 pub struct KMeansCluster {
-    members: Vec<usize>,
-    centroid: usize,
+    pub members: Vec<usize>,
+    pub centroid: usize,
 }
 
 impl KMeansCluster {
@@ -23,7 +23,7 @@ pub fn compute_kmeans(
     thread_guard: Arc<Mutex<i8>>,
     data_points: Arc<Vec<Vec<f32>>>,
     k: usize,
-) -> (f32, Vec<Vec<f32>>) {
+) -> Vec<KMeansCluster> {
     // assert that the number of clusters is smaller than the number of data points of
     // the data
     assert!(k < data_points.len());
@@ -134,30 +134,8 @@ pub fn compute_kmeans(
     }
 
     let _ = thread_guard.lock().unwrap();
-    let mut membership = (0..data_points.len()).collect::<Vec<_>>();
-    
-    let mut score = 0f32;
-    for (index, cluster) in clusters.iter().enumerate() {
-        let sum = cluster
-            .members
-            .iter()
-            .inspect(|&member| membership[*member] = index)
-            .fold(0f32, |acc, &x| {
-                acc + euclidean_distance(&data_points[x], &data_points[cluster.centroid])
-            });
-        score += sum;
-    }
 
-    // generate a new data point matrix containing the cluster index appended to the end
-    let mut results = Vec::with_capacity(data_points.len());
-    for (row, cluster_num) in data_points.iter().zip(membership.iter()) {
-        let mut data = row.clone();
-
-        data.push(*cluster_num as f32);
-        results.push(data);
-    }
-
-    (score, results)
+    clusters
 }
 
 fn euclidean_distance(x1: &[f32], x2: &[f32]) -> f32 {
