@@ -145,5 +145,5 @@ fn euclidean_distance(x1: &[f32], x2: &[f32]) -> f32 {
         sum += (xi - xj).powi(2);
     }
 
-    sum.sqrt()
+    sum
 }
